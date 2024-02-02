@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content%}
+    <h1>Author Detail</h1>
+    <h2><strong>First Name:</strong> {{ author.first_name }}</h2>
+    <p><strong>Last Name:</strong>{{ author.last_name }}</p>
+    <p><strong>DOB:</strong> {{ author.date_of_birth }}</p>
+    <p><strong>DOD:</strong> {{ author.date_of_death }}</p>
+    <div style="margin-left:20px;margin-top:20px">
+        <h4>Copies</h4>
+    
+        {% for book in author.books.all %}
+          <hr />
+          <h5><strong>Title:</strong> {{ book.title }}</h5>
+          <p><strong>Status:</strong> {{ book.genre }}</p>
+          <p><strong>Summary:</strong> {{ book.summary }}</p></p>
+        {% endfor %}
+      </div>
+{% endblock  %}
