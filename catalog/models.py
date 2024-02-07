@@ -1,4 +1,6 @@
+from datetime import date
 import uuid
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
@@ -10,7 +12,7 @@ class Genre(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('genre-detail', args=[str(self.id)])
+        return reverse('catalog:genre-detail', args=[str(self.id)])
     
 
 class Author(models.Model):
@@ -26,7 +28,7 @@ class Author(models.Model):
         return self.first_name + ' ' + self.last_name
     
     def get_absolute_url(self):
-        return reverse('author-detail', args=[str(self.id)])
+        return reverse('catalog:author-detail', args=[str(self.id)])
     
 class Language(models.Model):
     name = models.CharField(max_length=100)
@@ -46,7 +48,7 @@ class Book(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('book-detail', args=[str(self.id)])
+        return reverse('catalog:book-detail', args=[str(self.id)])
     
     def display_genre(self):
         return ', '.join(genre.name for genre in self.genre.all()[:3])
@@ -66,10 +68,18 @@ class BookInstance(models.Model):
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
     status = models.CharField( max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book availability', )
+    borrower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='borrower')
 
     class Meta:
         ordering = ['due_back']
+        permissions = (("can_mark_returned", "Set book as returned"),("can_see_all_borrowed", "See all borrowed books"))
 
     def __str__(self):
         return f'{self.book.title} ({self.id})'
+    
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
     
