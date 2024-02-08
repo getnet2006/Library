@@ -2,6 +2,13 @@
 
 {% block content %}
     <h1>Borrowed books</h1>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}><p>{{ message }}</p></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
     {% if bookinstance_list %}
     <ul>
@@ -9,6 +16,11 @@
       {% for bookinst in bookinstance_list %}
       <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
         <a href="{% url 'catalog:book-detail' bookinst.book.pk %}">{{ bookinst.book.title }}</a> ({{ bookinst.due_back }})
+
+        <form method="POST" action="{% url 'catalog:book_return' bookinst.id %}">
+          {% csrf_token %}<button class="btn btn-primary" type="submit">Return</button>
+        </form>
+
       </li>
       {% endfor %}
     </ul>

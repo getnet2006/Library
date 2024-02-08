@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Avilable Book List</h1>
+    {% if book_list %}
+        <ul>
+            {% for copy in book_list %}
+                <li>
+                    <a href="{% url 'catalog:book-detail' copy.book__id %}">{{copy.book__title}}</a> ({{copy.count}})
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+      <p>There are no avilable books in the library.</p>
+    {% endif %}       
+{% endblock %}

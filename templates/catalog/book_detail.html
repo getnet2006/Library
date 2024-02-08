@@ -2,12 +2,12 @@
 
 {% block content%}
     <h1>Book Detail</h1>
-    <h2><strong>Title:</strong> {{ book.title }}</h2>
-    <p><strong>Author:</strong><a href="{{ book.author.get_absolute_url }}"></a>{{ book.author.name }}</p>
-    <p><strong>Summary:</strong> {{ book.summary }}</p>
-    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
-    <p><strong>Genre:</strong> {{ book.genre.name }}</p> 
-    <p><strong>Language:</strong> {{ book.language.name }}</p>
+    <h2><strong>Title: </strong> {{ book.title }}</h2>
+    <p><strong>Author: </strong><a href="{{ book.author.get_absolute_url }}">{{ book.author.last_name }} {{ book.author.first_name }}</a></p>
+    <p><strong>Summary: </strong> {{ book.summary }}</p>
+    <p><strong>ISBN: </strong> {{ book.isbn }}</p>
+    <p><strong>Genre: </strong> {{ book.genre.name }}</p> 
+    <p><strong>Language: </strong> {{ book.language.name }}</p>
     <div style="margin-left:20px;margin-top:20px">
         <h4>Copies</h4>
     
@@ -16,11 +16,20 @@
           <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}">
             {{ copy.get_status_display }}
           </p>
+          <p class="text-primary">{% if copy.borrower.username == request.user.username %}You Borrowed it!{%endif%}</p>
           {% if copy.status != 'a' %}
             <p><strong>Due to be returned:</strong> {{ copy.due_back }}</p>
           {% endif %}
           <p><strong>Imprint:</strong> {{ copy.imprint }}</p>
           <p class="text-muted"><strong>Id:</strong> {{ copy.id }}</p>
+          
+          {% if copy.status == 'a' %}
+            <form action="{% url 'catalog:book_borrow' copy.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit">Borrow this book</button>
+            </form>
+          {% endif %}
+
         {% endfor %}
       </div>
 {% endblock  %}

@@ -8,7 +8,19 @@
 
       {% for author in author_list %}
       <li>
-        <a href="{{ author.get_absolute_url }}">{{ author.first_name }} {{ author.last_name }}</a> ({{author.books.count}})
+          <a href="{{ author.get_absolute_url }}"> {{ author.first_name }} {{ author.last_name }} </a>
+           ({{author.books.count}}) 
+          {% if perms.catalog.change_author %} 
+            <a href="{% url 'catalog:author-update' author.id %}">Update</a> | 
+          {% endif %} 
+          {% if perms.catalog.delete_author %} 
+             <!-- if we want to delete with out using template we must use form tag like below -->
+            <!-- <form method="POST" action="{% url 'catalog:author-delete' author.id %}">
+              {% csrf_token %}<input type="submit" value="DELETE">
+            </form> -->
+            <a href="{% url 'catalog:author-delete' author.id %}">Delete</a> 
+          {% endif %}
+        
       </li>
       {% endfor %}
 

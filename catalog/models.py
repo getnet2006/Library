@@ -14,7 +14,6 @@ class Genre(models.Model):
     def get_absolute_url(self):
         return reverse('catalog:genre-detail', args=[str(self.id)])
     
-
 class Author(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

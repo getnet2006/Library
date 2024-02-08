@@ -17,26 +17,41 @@
         <div class="col-sm-2">
           {% block sidebar %}
             <ul class="sidebar-nav">
+              {% if user.is_authenticated %}
+                  User: {{ user.username }}({{ user.groups.all.0.name }})
+              {%endif%}
               <li><a href="{% url 'catalog:index' %}">Home</a></li>
               <li><a href="{% url 'catalog:books' %}">All books</a></li>
               <li><a href="{% url 'catalog:authors' %}">All authors</a></li>
+              <li><a href="{% url 'catalog:avilable_books' %}">Avilable books</a></li>
+              <li></li>
+              <li></li>
               {% if user.is_authenticated %}
-                  Hi {{ user.username }}!
                   <li>
                     <a href="{% url 'catalog:my-borrowed' %}">My borrowed books</a>
                   </li>
-                  <li>
-                  <form action="{% url 'logout' %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit">Log Out</button>
-                  </form>
-                  </li>
+                  
                   {% if perms.catalog.can_see_all_borrowed %}
                     <li>
                       <a href="{% url 'catalog:all-borrowed' %}">All Borrowed Books</a>
                     </li>
                   {% endif %}
-
+                  {% if perms.catalog.add_author %}
+                    <li>
+                      <a href="{% url 'catalog:author-create' %}">Add Author</a>
+                    </li>
+                  {% endif %}
+                  {% if perms.catalog.add_book %}
+                    <li>
+                      <a href="{% url 'catalog:book-create' %}">Add Book</a>
+                    </li>
+                  {% endif %}
+                  <li>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Log Out</button>
+                    </form>
+                  </li>
               {% else %}
                   <li>
                   <a href="{% url 'login' %}">Log In</a>
