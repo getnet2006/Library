@@ -34,7 +34,6 @@ def index(request: HttpRequest):
     num_instances_available = BookInstance.objects.filter(status__exact='a').count()
     num_authors = Author.objects.count()
     num_genres = Genre.objects.count()
-    num_books_with_genres = Book.objects.filter(title__icontains='the').count()
     # context to send to the template
     context = {
         'num_books': num_books,
@@ -42,7 +41,6 @@ def index(request: HttpRequest):
         'num_instances_available': num_instances_available,
         'num_authors': num_authors,
         'num_genres': num_genres,
-        'num_books_with_genres': num_books_with_genres,
         'num_visits': num_vists,
     }
     return render(request, 'catalog/index.html', context=context)
@@ -159,6 +157,10 @@ class BookDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 @login_required
 def borrow_book(request: HttpRequest, pk: int):
     book_instance = get_object_or_404(BookInstance, pk=pk)
+    borrowed_book = BookInstance.objects.filter(borrower=request.user).values_list('book__title', flat=True)
+    if book_instance.book.title in borrowed_book:
+        messages.warning(request, 'You already borrowed this book')
+        return HttpResponseRedirect(reverse('catalog:my-borrowed'))
     book_instance.borrower = request.user
     book_instance.due_back = datetime.date.today() + datetime.timedelta(weeks=3)
     book_instance.status = 'o'

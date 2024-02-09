@@ -18,7 +18,7 @@
         <a href="{% url 'catalog:book-detail' bookinst.book.pk %}">{{ bookinst.book.title }}</a> ({{ bookinst.due_back }})
 
         <form method="POST" action="{% url 'catalog:book_return' bookinst.id %}">
-          {% csrf_token %}<button class="btn btn-primary" type="submit">Return</button>
+          {% csrf_token %}<button class="btn btn-link" type="submit">Return</button>
         </form>
 
       </li>

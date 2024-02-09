@@ -3,13 +3,3 @@
     padding: 0;
     list-style: none;
   }
-
-  button {
-    background: none!important;
-    border: none;
-    padding: 0!important;
-    text-decoration: underline;
-    /* set text color to blue */
-    color: rgba(4, 2, 20, 0.836);
-    cursor: pointer;
-  }

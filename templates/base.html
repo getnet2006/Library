@@ -18,7 +18,8 @@
           {% block sidebar %}
             <ul class="sidebar-nav">
               {% if user.is_authenticated %}
-                  User: {{ user.username }}({{ user.groups.all.0.name }})
+                  User: {{ user.username }}
+                  {% if user.is_superuser %}(Admin) {%else%}({{ user.groups.all.0.name }}) {% endif %}
               {%endif%}
               <li><a href="{% url 'catalog:index' %}">Home</a></li>
               <li><a href="{% url 'catalog:books' %}">All books</a></li>
@@ -46,12 +47,18 @@
                       <a href="{% url 'catalog:book-create' %}">Add Book</a>
                     </li>
                   {% endif %}
+                  {% if user.is_superuser %}
+                    <li>
+                      <a href="{% url 'admin:index' %}">Add Librarian</a>
+                    </li>
+                  {% endif %}
                   <li>
                     <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <button type="submit">Log Out</button>
+                        <button class="btn btn-link" type="submit">Log Out</button>
                     </form>
                   </li>
+                  
               {% else %}
                   <li>
                   <a href="{% url 'login' %}">Log In</a>
