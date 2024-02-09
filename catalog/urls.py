@@ -22,4 +22,5 @@ urlpatterns = [
     path('borrow/<uuid:pk>', views.borrow_book, name='book_borrow'),
     path('avilable/', views.AvilableBooksListView.as_view(), name='avilable_books'),
     path('return/<uuid:pk>', views.return_book, name='book_return'),
+    path('bookinstance/create/', views.BookInstanceCreate.as_view(), name='bookinstance-create'),
 ]

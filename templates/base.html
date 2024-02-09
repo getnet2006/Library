@@ -47,6 +47,11 @@
                       <a href="{% url 'catalog:book-create' %}">Add Book</a>
                     </li>
                   {% endif %}
+                  {% if perms.catalog.add_bookinstance %}
+                    <li>
+                      <a href="{% url 'catalog:bookinstance-create' %}">Create BookInstance</a>
+                    </li>
+                  {% endif %}
                   {% if user.is_superuser %}
                     <li>
                       <a href="{% url 'admin:index' %}">Add Librarian</a>

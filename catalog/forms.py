@@ -2,7 +2,7 @@ import datetime
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from catalog.models import Author, Book
+from catalog.models import Author, Book, BookInstance
 
 class RenewBookForm(forms.Form):
     renewal_date = forms.DateField(help_text="Enter a date between now and 4 weeks (default 3).")
@@ -41,3 +41,9 @@ class BookForm(ModelForm):
     class Meta:
         model = Book
         fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
+
+class BookInstanceForm(ModelForm):
+    class Meta:
+        model = BookInstance
+        fields = ['book', 'imprint', 'status']
+        widgets = {'due_back': forms.DateInput({'type': 'date'})}

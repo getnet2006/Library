@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
-from catalog.forms import AuthorForm, BookForm, RenewBookForm
+from catalog.forms import AuthorForm, BookForm, BookInstanceForm, RenewBookForm
 from .models import Book, Author, BookInstance, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin
 # import generic view from django
@@ -188,3 +188,15 @@ def return_book(request:HttpRequest, pk:int):
     book_instance.save()
     messages.success(request, 'You have successfully returned this book')
     return HttpResponseRedirect(reverse('catalog:my-borrowed'))
+
+class BookInstanceCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'catalog.add_bookinstance'
+    form_class = BookInstanceForm
+    model = BookInstance
+    template_name = 'catalog/bookinstance_create.html'
+    success_url = reverse_lazy('catalog:books')
+
+    # pass message to view
+    def form_valid(self, form):
+        messages.success(self.request, 'You have successfully created a new book instance')
+        return super().form_valid(form)
