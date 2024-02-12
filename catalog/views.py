@@ -87,9 +87,9 @@ class BorrowedBookListView(LoginRequiredMixin, PermissionRequiredMixin, generic.
     def get_queryset(self):
         return BookInstance.objects.filter(status__exact='o').order_by('due_back')
 
-# add permisssion
-@permission_required('catalog.can_mark_returned', raise_exception=True)
+# the order of decorator matters
 @login_required
+@permission_required('catalog.can_mark_returned', raise_exception=True)
 def renew_book_librarian(request: HttpRequest, pk: int):
     book_instance = get_object_or_404(BookInstance, pk=pk)
     borrower = book_instance.borrower

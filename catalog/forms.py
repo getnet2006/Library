@@ -30,6 +30,10 @@ class AuthorForm(ModelForm):
     # check if date_of_birth is less than date_of_death
     def clean_date_of_death(self):
         data = self.cleaned_data['date_of_death']
+        # check if data is not null
+        if data is None:
+            return data
+        # check if date_of_birth is less than date_of_death
         if data < self.cleaned_data['date_of_birth']:
             raise ValidationError('Invalid date - death date before birth date')
         # check if it is the same dob and dod
